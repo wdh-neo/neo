@@ -4,17 +4,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Terminal / sh-inspired palette (cream on deep purple-black)
-        bg: '#1f1226',
-        'bg-elev': '#2a1830',
-        'bg-deep': '#150b1a',
-        fg: '#f4e8d6',
-        'fg-dim': '#a89b86',
-        accent: '#c4b5d4',
-        'accent-strong': '#d8c8e8',
-        'accent-2': '#6b5b7a',
-        success: '#8cd9a8',
-        warn: '#e8b96a',
+        // Black + white terminal with matrix green + burnt orange accents
+        bg: '#0a0a0a',
+        'bg-elev': '#141414',
+        'bg-deep': '#050505',
+        fg: '#f0f0f0',
+        'fg-dim': '#888888',
+        accent: '#00ff9f',        // matrix green (primary)
+        'accent-strong': '#39ff14',
+        'accent-2': '#333333',    // subtle borders
+        'accent-orange': '#ff6b35', // burnt orange (secondary when green is loud)
+        success: '#00ff9f',
+        warn: '#ff6b35',
       },
       fontFamily: {
         sans: ['Geist Sans', 'system-ui', 'sans-serif'],

@@ -32,13 +32,9 @@ jobs:
 
       - name: Build site
         run: npm run build
-        env:
-          GITHUB_PAGES: true
 
-      # No CNAME yet — DNS not configured. When ready for neo.engineer,
-      # uncomment the step below and remove GITHUB_PAGES (or adjust base handling).
-      # - name: Add CNAME
-      #   run: echo 'neo.engineer' > dist/CNAME
+      - name: Add CNAME
+        run: echo 'neo.engineer' > dist/CNAME
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

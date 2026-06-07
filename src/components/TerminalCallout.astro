@@ -1,0 +1,92 @@
+---
+type Variant = "info" | "pricing" | "note" | "directive";
+interface Props {
+  title: string;
+  variant?: Variant;
+}
+const { title, variant = "info" } = Astro.props;
+---
+
+<aside class={`callout callout--${variant}`}>
+  <div class="callout__top" aria-hidden="true">
+    <span class="callout__corner">╭</span>
+    <span class="callout__title">─ {title} ─</span>
+    <span class="callout__rule"></span>
+    <span class="callout__corner">╮</span>
+  </div>
+  <div class="callout__body">
+    <slot />
+  </div>
+  <div class="callout__bottom" aria-hidden="true">
+    <span class="callout__corner">╰</span>
+    <span class="callout__rule callout__rule--bottom"></span>
+    <span class="callout__corner">╯</span>
+  </div>
+</aside>
+
+<style>
+  .callout {
+    --border: var(--accent-2);
+    --tint: transparent;
+    font-family: var(--mono);
+    color: var(--fg);
+    margin: 1.5rem 0;
+    background: var(--tint);
+    border-radius: var(--radius);
+  }
+
+  .callout--info    { --border: var(--accent-2); }
+  .callout--pricing { --border: var(--accent); --tint: rgba(196, 181, 212, 0.05); }
+  .callout--note    { --border: var(--warn); --tint: rgba(232, 185, 106, 0.05); }
+  .callout--directive { --border: var(--success); --tint: rgba(140, 217, 168, 0.04); }
+
+  .callout__top,
+  .callout__bottom {
+    display: flex;
+    align-items: center;
+    color: var(--border);
+    font-size: 0.85rem;
+    line-height: 1;
+    user-select: none;
+  }
+
+  .callout__corner {
+    flex: 0 0 auto;
+    padding: 0 0.1em;
+  }
+
+  .callout__title {
+    flex: 0 0 auto;
+    padding: 0 0.4em;
+    color: var(--accent);
+    text-transform: lowercase;
+    letter-spacing: 0.04em;
+  }
+
+  .callout__rule {
+    flex: 1 1 auto;
+    border-top: 1px dashed var(--border);
+    height: 0;
+    margin: 0 0.1em;
+  }
+
+  .callout__body {
+    padding: 0.85rem 1.1rem;
+    font-family: var(--sans);
+    line-height: 1.55;
+  }
+
+  .callout__body :global(p) { margin: 0 0 0.6rem; }
+  .callout__body :global(p:last-child) { margin-bottom: 0; }
+  .callout__body :global(code) { font-family: var(--mono); }
+  .callout__body :global(.row) {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.25rem 0;
+    border-bottom: 1px dotted var(--accent-2);
+    font-family: var(--mono);
+  }
+  .callout__body :global(.row:last-child) { border-bottom: 0; }
+  .callout__body :global(.row strong) { color: var(--accent-strong); font-variant-numeric: tabular-nums; }
+</style>

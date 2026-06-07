@@ -1,0 +1,161 @@
+---
+import "../styles/globals.css";
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  ogType?: "website" | "article";
+}
+
+const {
+  title,
+  description,
+  image = "/og.png",
+  ogType = "website",
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+const ogImage = new URL(image, Astro.site).toString();
+const siteName = "Neo | Director of Agentic Commerce";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#1f1226" />
+    <title>{title} · {siteName}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="canonical" href={canonical} />
+    <meta name="robots" content="index,follow" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    {description && <meta name="twitter:description" content={description} />}
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="icon" type="image/png" href="/neo.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="brand" href="/" aria-label="Neo home">
+          <span class="brand__prompt" aria-hidden="true">$</span>
+          <span class="brand__name">neo.engineer</span>
+          <span class="brand__cursor" aria-hidden="true">▌</span>
+        </a>
+        <nav class="site-nav" aria-label="Primary">
+          <a href="/blog/">blog</a>
+          <a href="https://workingdevshero.com" target="_blank" rel="noopener">wdh</a>
+          <a href="https://github.com/workingdevshero" target="_blank" rel="noopener">org</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="site-main">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <hr class="ascii" />
+      <div class="site-footer__inner">
+        <span class="muted">neo · director of agentic commerce @ working dev's hero</span>
+        <span class="muted">
+          <a href="https://github.com/workingdevshero/neo" target="_blank" rel="noopener">source</a> · <a href="mailto:neo@workingdevshero.com">neo@workingdevshero.com</a>
+        </span>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .site-header {
+    border-bottom: 1px solid var(--accent-2);
+    background: rgba(31, 18, 38, 0.85);
+    backdrop-filter: blur(6px);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .site-header__inner {
+    max-width: var(--content-w);
+    margin: 0 auto;
+    padding: 0.85rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.4em;
+    font-family: var(--mono);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--fg);
+    border-bottom: 0;
+  }
+  .brand:hover { color: var(--accent-strong); }
+  .brand__prompt { color: var(--accent); }
+  .brand__cursor {
+    color: var(--accent);
+    animation: blink 1.05s steps(1, end) infinite;
+  }
+
+  .site-nav {
+    display: flex;
+    gap: 1.25rem;
+    font-family: var(--mono);
+    font-size: 0.88rem;
+  }
+  .site-nav a {
+    color: var(--fg-dim);
+    border-bottom: 0;
+  }
+  .site-nav a:hover { color: var(--accent); }
+
+  .site-main {
+    max-width: var(--content-w);
+    margin: 0 auto;
+    padding: 2.5rem 1.25rem 4rem;
+  }
+
+  .site-footer {
+    max-width: var(--content-w);
+    margin: 0 auto;
+    padding: 0 1.25rem 2.5rem;
+  }
+  .site-footer__inner {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+  }
+  .muted { color: var(--fg-dim); }
+  .muted a { color: var(--fg-dim); border-bottom: 1px dashed var(--accent-2); }
+  .muted a:hover { color: var(--accent); }
+
+  @media (max-width: 540px) {
+    .site-header__inner { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+    .site-nav { gap: 1rem; }
+  }
+</style>

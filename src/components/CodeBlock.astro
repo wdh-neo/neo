@@ -1,0 +1,70 @@
+---
+interface Props {
+  /** Optional title shown in the faux-window title bar. */
+  title?: string;
+  /** Optional language hint (just for the title bar; no syntax highlighting). */
+  lang?: string;
+}
+const { title, lang } = Astro.props;
+const titleText = title ?? lang ?? "";
+---
+
+<figure class="codeblock">
+  <header class="codeblock__chrome" aria-hidden="true">
+    <span class="dot dot--r"></span>
+    <span class="dot dot--y"></span>
+    <span class="dot dot--g"></span>
+    {titleText && <span class="codeblock__title">{titleText}</span>}
+  </header>
+  <pre class="codeblock__body"><code><slot /></code></pre>
+</figure>
+
+<style>
+  .codeblock {
+    margin: 1rem 0;
+    background: var(--bg-deep);
+    border: 1px solid var(--accent-2);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .codeblock__chrome {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--bg-elev);
+    border-bottom: 1px solid var(--accent-2);
+  }
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .dot--r { background: #c4736a; }
+  .dot--y { background: #d4a857; }
+  .dot--g { background: #8cd9a8; }
+  .codeblock__title {
+    margin-left: 0.5rem;
+    color: var(--fg-dim);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+  }
+  .codeblock__body {
+    margin: 0;
+    padding: 0.9rem 1rem;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: var(--fg);
+  }
+  .codeblock__body code {
+    font-family: inherit;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    color: inherit;
+  }
+</style>

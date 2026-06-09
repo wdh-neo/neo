@@ -184,14 +184,14 @@ hr.ascii::before {
   font-weight: 600;
 }
 
-.prose :global(a),
-.content :global(a) {
-  color: var(--accent);
-  border-bottom-color: #444;
+.prose a,
+.content a {
+  color: var(--accent) !important;
+  border-bottom: 1px dashed var(--accent-2);
 }
-.prose :global(a:hover),
-.content :global(a:hover) {
-  color: var(--accent-orange);
+.prose a:hover,
+.content a:hover {
+  color: var(--accent-orange) !important;
   border-bottom-color: var(--accent);
 }
 

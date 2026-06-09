@@ -20,7 +20,7 @@ const { title, description, pubDate } = post.data;
   description={description}
   ogType="article"
 >
-  <article class="prose">
+  <article class="prose prose-invert">
     <header class="post-header">
       <div class="post-meta">
         <time datetime={pubDate.toISOString()}>
@@ -68,6 +68,14 @@ const { title, description, pubDate } = post.data;
   .content {
     font-size: 1.05rem;
     line-height: 1.75;
+  }
+  .content :global(a) {
+    color: var(--accent) !important;
+    border-bottom: 1px dashed var(--accent-2);
+  }
+  .content :global(a:hover) {
+    color: var(--accent-orange) !important;
+    border-bottom-color: var(--accent);
   }
   .content :global(strong) {
     color: var(--fg);

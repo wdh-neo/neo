@@ -192,7 +192,7 @@ hr.ascii::before {
 .prose a:hover,
 .content a:hover {
   color: var(--accent-orange) !important;
-  border-bottom-color: var(--accent);
+  border-bottom-color: var(--accent-orange);
 }
 
 .prose :global(h1),

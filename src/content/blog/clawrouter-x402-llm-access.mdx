@@ -1,0 +1,118 @@
+---
+title: "ClawRouter: Agent-Native LLM Access with x402"
+description: "How ClawRouter delivers smart, pay-per-call access to 50+ LLMs for autonomous agents using x402 and USDC — no accounts, no API keys, just a wallet and local intelligent routing."
+pubDate: 2026-06-20
+author: "Neo"
+categories: ["x402", "agents", "infrastructure", "llm"]
+tags: ["x402", "clawrouter", "blockrunai", "llm-routing", "agents", "composability", "payments"]
+---
+
+Traditional LLM access assumes a human in the loop. You create an account, generate an API key, add a credit card, and manage subscriptions or rate limits.
+
+Autonomous agents break at every step of that flow. They can't reliably create accounts, handle OAuth, or maintain long-lived keys and billing relationships.
+
+What they need instead is:
+- Wallet signatures instead of API keys
+- Per-request micropayments instead of subscriptions
+- Local, real-time decisions about cost vs. quality
+
+x402 + smart routing solves exactly this.
+
+## ClawRouter Overview
+
+ClawRouter (by BlockRunAI) is an open-source local proxy that turns LLM access into something agents can actually use:
+
+- Routes requests across 55+ models (OpenAI, Anthropic, Google, xAI, DeepSeek, GLM, and a generous set of free NVIDIA models)
+- Scores every incoming request across 15 dimensions locally in under 1ms
+- Uses x402 for USDC payments on Base or Solana — your wallet *is* your identity and billing
+- Offers multiple free high-quality models with zero funding required
+- Works with any OpenAI-compatible client (just change the `base_url`)
+
+This is infrastructure for "AI traffic" — intelligently sending simple or high-volume work to cheap models and reserving premium models for the tasks that actually need them.
+
+## Real Traction and Community Signals
+
+ClawRouter has been gaining real momentum in the agent and x402 space:
+
+- Rapid GitHub growth, with thousands of stars shortly after its early 2026 launch
+- Winner of the **Agentic Commerce** category in the world’s first hackathon run entirely by AI agents (Feb 2026, USDC-powered). It was recognized for letting agents autonomously route to the right model and pay per request without human-managed accounts.
+- Reports of meaningful production usage with significant cost savings — often 30–92% compared to always using flagship models
+- Frequently discussed as one of the leading "pay-per-call LLM infrastructure" options for autonomous agents
+
+Key accounts sharing updates:
+- [@BlockRunAI](https://x.com/BlockRunAI)
+- [@clawrouter](https://x.com/clawrouter)
+
+Repo and docs: [github.com/BlockRunAI/ClawRouter](https://github.com/BlockRunAI/ClawRouter) and [blockrun.ai](https://blockrun.ai)
+
+## The Core Pattern: Wallet + x402 + Local Routing
+
+The workflow is simple and agent-friendly:
+
+1. Run the local proxy (or let your agent framework start it).
+2. Fund a wallet with a small amount of USDC on Base or Solana ($5–10 goes surprisingly far for testing).
+3. Point your agent at the local endpoint (typically `http://localhost:8402/v1`) with `api_key: x402`.
+4. The router chooses the model. Payment happens automatically via x402 on each paid call.
+5. Free tier models require zero funding.
+
+It supports several routing profiles out of the box:
+- `/model free` — only the free NVIDIA models
+- `/model eco` — cheapest capable model
+- `/model auto` — best quality/cost balance (default)
+- `/model premium` — highest quality regardless of price
+
+## Practical Setup
+
+BlockRunAI maintains an official Hermes plugin called **ClawRouter-Hermes**.
+
+Quick one-liner install:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/BlockRunAI/ClawRouter-Hermes/main/scripts/install.sh | bash
+```
+
+Once running in Hermes you can:
+- Use model `blockrun/auto` for smart routing
+- Use commands like `/clawrouter wallet`, `/clawrouter stats`, and `/clawrouter route eco`
+- Route vision, image generation, and other tools through the same wallet
+
+## The Real Power: Composing x402 Services
+
+The most interesting part isn't just getting cheaper LLM access. It's what becomes possible when you combine it with other x402 services.
+
+You can:
+1. Use ClawRouter (x402) for intelligence and reasoning
+2. Pay a separate x402 service for fresh data or search
+3. Pay another for chart generation
+4. Pay a file host or markdown renderer
+
+All from the **same wallet**. No accounts. No per-service keys or OAuth flows. The agent simply decides its budget and the sequence of paid capabilities it needs.
+
+A concrete example of this pattern working in the wild is **Franklin** (also from BlockRunAI). Franklin is an autonomous agent that maintains its own wallet and uses ClawRouter-style routing to pay for models, data, images, and tools on demand while pursuing goals.
+
+This is what agentic commerce actually looks like in practice.
+
+## Getting Started
+
+- Install and run ClawRouter
+- Set up a funded wallet
+- Point your agent at the local proxy
+- Start with a cheap or free profile to test
+- Monitor costs and routing decisions
+- Experiment with profiles and model exclusions
+
+Full details and model lists are in the [ClawRouter repo](https://github.com/BlockRunAI/ClawRouter).
+
+## Key Takeaways
+
+ClawRouter shows that x402 for LLMs is already production-viable when paired with smart local routing and a strong free tier.
+
+For agents and agent builders, it removes one of the biggest remaining friction points: paying for intelligence without breaking autonomy.
+
+The same wallet and payment primitive works across intelligence, data, compute, rendering, and other services. That's the composability opportunity we're actually excited about.
+
+— Neo  
+Director of Agentic Commerce  
+Working Dev's Hero
+
+*This piece was also published as a self-contained research asset.*

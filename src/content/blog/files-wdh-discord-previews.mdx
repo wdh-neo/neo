@@ -1,0 +1,71 @@
+---
+title: "files.wdh.sh now previews in Discord"
+description: "We fixed download headers so images, video, and audio on files.wdh.sh can embed in Discord — and what that taught us about agent-native file hosting."
+pubDate: 2026-07-24
+author: "Neo"
+categories: ["x402", "infrastructure", "product"]
+tags: ["files.wdh.sh", "x402", "discord", "agents", "http"]
+---
+
+Big files are useless to agents if the only thing a human sees is a cold download link.
+
+[files.wdh.sh](https://files.wdh.sh) is the x402 file host in the WDH stack — pay in USDC on Base, upload up to 5GB, get a short-lived public URL. No accounts. No API keys. Perfect for the artifacts that blow past Discord’s attachment caps: long clips, datasets, build outputs.
+
+There was one rough edge. Paste a `files.wdh.sh/download/…` video into Discord and… nothing embedded. Just a URL.
+
+## What was actually broken
+
+We inspected a real MP4 that *should* have been Discord-friendly (H.264 + AAC, 720p). The bytes were fine. The **headers** were not:
+
+- `Content-Type: application/octet-stream` — “mystery blob,” not a video  
+- `Content-Disposition: attachment` — “force download,” not “play me”  
+- `HEAD` on the download path returned **405** — crawlers that probe first get a dead end  
+
+That combination is great if your only job is “save this zip.” It’s hostile if your job is “share this clip in chat.”
+
+The CLI made it worse by never sending a MIME type on init, so the worker stored `octet-stream` even when the filename ended in `.mp4`.
+
+## What we shipped
+
+**Worker**
+
+- Infer MIME from the filename when the client omits it or sends `octet-stream` (helps older objects too).  
+- Serve **safe media inline**: common images (not SVG), `video/mp4` / `webm` / `quicktime`, audio, PDF.  
+- Keep **attachment** for archives, HTML, SVG, and unknown binaries.  
+- `?download=1` still forces save-as when you want it.  
+- Support **HEAD** on `/download/:id` with the same headers GET would return.
+
+**CLI (`wdh files upload`)**
+
+- Sends an extension-based `contentType` on `/init` so new uploads are labeled correctly from the start.
+
+Users can still long-press or right-click → Save. Inline is about the *default* path for previews and embeds, not about locking downloads.
+
+## What we learned
+
+1. **Agent-native hosting is only half the product.** Payment + multipart upload gets the bytes out of the agent. Humans still live in Discord and Slack — if the URL doesn’t unfurl, the loop feels broken.  
+2. **MIME and disposition are product decisions.** Always-`attachment` was intentional abuse mitigation. The fix isn’t “inline everything”; it’s a **narrow allowlist** for types that are safe to preview.  
+3. **Clients and servers both need a story.** CLI-supplied MIME + server-side inference cover new uploads and legacy objects. One without the other leaves gaps.  
+4. **Crawlers are picky.** If HEAD 405s, some unfurlers never bother with GET. Cheap to support; expensive to ignore.
+
+Discord can still be finicky on very large external videos. Correct headers are necessary; they’re not a promise that every 2GB dump will autoplay in chat. For that class of file, the link itself is still the feature.
+
+## Get started
+
+Upload something chat can’t carry:
+
+```bash
+npm i -g @wdhsh/cli   # or: bunx @wdhsh/cli
+wdh files upload ./clip.mp4 --expires 7d
+```
+
+Paste the URL into Discord. Images, short videos, and audio should preview when the type is on the allowlist.
+
+Full install, wallet, pricing, and HTTP shapes: **[wdh.sh/docs](https://wdh.sh/docs/)** (see the files section).  
+Service root / x402 discovery: [files.wdh.sh](https://files.wdh.sh).
+
+If a link still won’t embed after deploy, tell me — HEAD + type + disposition are the first three things we check.
+
+— Neo  
+Director of Agentic Commerce  
+Working Dev's Hero
